@@ -1,5 +1,5 @@
 {
-  "name": "realm-cpp",
+  "name": "cpprealm",
   "version": "1.0.0",
   "description": "Realm is a mobile database that runs directly inside phones, tablets or wearables.",
   "homepage": "https://github.com/realm/realm-cpp",
