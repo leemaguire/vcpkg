@@ -5,6 +5,8 @@ vcpkg_from_github(
     REPO realm/realm-cpp
     REF "v${VERSION}"
     SHA512 cf21ffc73be08204c16da7bf83fdd92fe801a1ee3ca32abbfd8f8deb2430817407fe971a2dfad20fdf7965f7d592e2a0835e9cb63c8db32cc763ef0d5f75150f
+    PATCHES
+        fix-config.patch
 )
 
 set(REALMCPP_DIR ${SOURCE_PATH})
@@ -29,12 +31,10 @@ file(COPY ${CATCH2_DIR}/ DESTINATION ${REALMCORE_DIR}/external/catch)
 file(COPY ${REALMCORE_DIR}/ DESTINATION ${REALMCPP_DIR}/realm-core)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH ${REALMCPP_DIR}
 )
 
 vcpkg_cmake_install()
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/realm-cpp/cmake)
-file(COPY ${CURRENT_PACKAGES_DIR}/share DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
 
 file(GLOB HEADER_FILES "${REALMCPP_DIR}/src/cpprealm/*.hpp")
 file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cpprealm")

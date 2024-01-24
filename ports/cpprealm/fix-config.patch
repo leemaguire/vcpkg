@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e582370..76fc28c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -121,6 +121,6 @@ if(MSVC)
+     set_property(TARGET uv_a PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ endif()
+ 
+-if (NOT REALM_CPP_NO_TESTS)
+-    add_subdirectory(tests)
+-endif()
++# if (NOT REALM_CPP_NO_TESTS)
++#     add_subdirectory(tests)
++# endif()
