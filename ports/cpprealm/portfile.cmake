@@ -41,12 +41,12 @@ vcpkg_fixup_pkgconfig()
 # file(GLOB HEADER_FILES "${REALMCPP_DIR}/src/cpprealm/*.hpp")
 # file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cpprealm")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
