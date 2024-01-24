@@ -35,9 +35,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(GLOB HEADER_FILES "${REALMCPP_DIR}/src/cpprealm/*.hpp")
-file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cpprealm")
+# file(GLOB HEADER_FILES "${REALMCPP_DIR}/src/cpprealm/*.hpp")
+# file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cpprealm")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
