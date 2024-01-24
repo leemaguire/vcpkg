@@ -1,42 +1,45 @@
 # vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO realm/realm-cpp
-    REF "v${VERSION}"
-    SHA512 cf21ffc73be08204c16da7bf83fdd92fe801a1ee3ca32abbfd8f8deb2430817407fe971a2dfad20fdf7965f7d592e2a0835e9cb63c8db32cc763ef0d5f75150f
-    PATCHES
-        fix-config.patch
+# vcpkg_from_github(
+#     OUT_SOURCE_PATH SOURCE_PATH
+#     REPO realm/realm-cpp
+#     REF "v${VERSION}"
+#     SHA512 cf21ffc73be08204c16da7bf83fdd92fe801a1ee3ca32abbfd8f8deb2430817407fe971a2dfad20fdf7965f7d592e2a0835e9cb63c8db32cc763ef0d5f75150f
+#     PATCHES
+#         fix-config.patch
+# )
+
+set(GIT_URL "git@github.com:realm/realm-cpp.git")
+set(GIT_REV "43a68815c11eb7fdd8010eef91157419d2e17b64")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/realm-cpp)
+message(STATUS "curr buildtree ${CURRENT_BUILDTREES_DIR}")
+
+if(NOT EXISTS "${SOURCE_PATH}/.git")
+    message(STATUS "Cloning")
+    vcpkg_execute_required_process(
+        COMMAND ${GIT} clone ${GIT_URL} 
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+        LOGNAME clone
+    )
+
+endif()
+
+
+find_program(GIT git)
+vcpkg_execute_required_process(
+  COMMAND ${GIT} submodule update --init --recursive
+  WORKING_DIRECTORY ${SOURCE_PATH}
+  LOGNAME submodules
 )
 
-set(REALMCPP_DIR ${SOURCE_PATH})
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO catchorg/Catch2
-    REF "v3.4.0"
-    SHA512 3b452378201ac53c9ffba7801231aa3b32c5fb496f01d670fcee25baf95f405e565ae2aafba49ea5694f906fc61a8b04592c68b9fb12839767070587a48c89fa
-)
-set(CATCH2_DIR ${SOURCE_PATH})
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO realm/realm-core
-    REF "v13.25.1"
-    SHA512 35a0b3b68abbd3fa42b7ead76b39bafef7472d831af20714115b1b09ece4398b176e12679a4b8b95f0d823048aff263d441405efdcd841b24efeb1ccd7a2fd71
-)
-set(REALMCORE_DIR ${SOURCE_PATH})
-
-file(COPY ${CATCH2_DIR}/ DESTINATION ${REALMCORE_DIR}/external/catch)
-file(COPY ${REALMCORE_DIR}/ DESTINATION ${REALMCPP_DIR}/realm-core)
+message(STATUS "curr buildtree ${CURRENT_BUILDTREES_DIR}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${REALMCPP_DIR}
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS -DREALM_CPP_NO_TESTS=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
 
 
 # file(GLOB HEADER_FILES "${REALMCPP_DIR}/src/cpprealm/*.hpp")
@@ -48,23 +51,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-function(auto_clean dir)
-    file(GLOB entries "${dir}/*")
-    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
-    foreach(entry IN LISTS entries)
-        if(entry IN_LIST files)
-            continue()
-        endif()
-        file(GLOB_RECURSE children "${entry}/*")
-        if(children)
-            auto_clean("${entry}")
-        else()
-            file(REMOVE_RECURSE "${entry}")
-        endif()
-    endforeach()
-endfunction()
-auto_clean("${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
