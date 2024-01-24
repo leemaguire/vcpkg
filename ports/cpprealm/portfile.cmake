@@ -38,15 +38,33 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+
 # file(GLOB HEADER_FILES "${REALMCPP_DIR}/src/cpprealm/*.hpp")
 # file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cpprealm")
 
 # file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 # file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
+function(auto_clean dir)
+    file(GLOB entries "${dir}/*")
+    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
+    foreach(entry IN LISTS entries)
+        if(entry IN_LIST files)
+            continue()
+        endif()
+        file(GLOB_RECURSE children "${entry}/*")
+        if(children)
+            auto_clean("${entry}")
+        else()
+            file(REMOVE_RECURSE "${entry}")
+        endif()
+    endforeach()
+endfunction()
+auto_clean("${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
