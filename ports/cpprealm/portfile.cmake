@@ -29,10 +29,17 @@ vcpkg_cmake_configure(
 
 
 vcpkg_cmake_install()
-vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+message(${VCPKG_LIBRARY_LINKAGE})
 
+# vcpkg_cmake_config_fixup(PACKAGE_NAME "cpprealm" CONFIG_PATH "share/cpprealm" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+#     vcpkg_cmake_config_fixup(PACKAGE_NAME "libcpprealm" CONFIG_PATH "lib/cmake/libcpprealm")
+#     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libcpprealm-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cpprealm")
+# else()
+#     message("not static")
+#     # vcpkg_cmake_config_fixup(PACKAGE_NAME "libcpprealm" CONFIG_PATH "lib/cmake/libcpprealm")
+# endif()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
