@@ -1,5 +1,5 @@
 set(GIT_URL "git@github.com:realm/realm-cpp.git")
-set(GIT_REV "05b48476dfd0a37d6d6f44ff81711be22699ccf1")
+set(GIT_REV "f96116aefa35891320acaa7947340083f9568876")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/realm-cpp)
 find_program(GIT git)
 
